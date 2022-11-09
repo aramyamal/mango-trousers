@@ -19,5 +19,4 @@ def valid_solution(board):
                     square_sum += board[i+l][j+k] 
             if square_sum != 45:
                 return False   
-
     return True
