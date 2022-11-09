@@ -8,5 +8,3 @@ def snail(snail_map):
         slist += smap[0].tolist()       #add the top row to list
         smap = np.rot90(smap[1:])       #remove the top row, then rotate matrix 90 degrees
     return slist
-
-print(snail([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]))
