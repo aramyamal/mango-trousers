@@ -1,7 +1,6 @@
 import time
 import numpy as np
 import pygame
-from scipy import sparse
 
 COLOR_BG = (10, 10, 10)
 COLOR_GRID = (40, 40, 40)
