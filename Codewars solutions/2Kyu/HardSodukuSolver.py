@@ -15,18 +15,22 @@
 import numpy as np
 from random import randint
 
-def return_duplicate_index(list):   #for a list: returns 1-d index of all duplicates except for 0-duplicates
+#returns index of all duplicates except for 0-duplicates, input: list
+def return_duplicate_index(list):
     dup = {}
     for i,x in enumerate(list):
         dup.setdefault(x,[]).append(i)
     duplicate_index = [x for i,x in dup.items() if len(x) > 1 and i > 0]
     return duplicate_index
 
-
-def sudoku_validifier(puzzle):      #returns all duplicates of sudoku board and the corresponding
-    puzzle = np.array(puzzle)       #2d-index of each duplicate. Return example of 1 duplicate:
-    duplicate_indices = []          #'[(3, 5), (6, 5)]'. 2 duplicates: '[(3, 5), (3, 8), (2, 8), (3, 8)]'.
-                                    #Multiple of the same index occurs because duplicates in both row/column and/or square 
+#returns all duplicates of sudoku board and the corresponding
+#2d-index of each duplicate. Return example of 1 duplicate:
+#'[(3, 5), (6, 5)]'. 2 duplicates: '[(3, 5), (3, 8), (2, 8), (3, 8)]'.
+#Multiple of the same index occurs because duplicates in both row/column and/or square 
+def sudoku_validifier(puzzle):      
+    puzzle = np.array(puzzle)       
+    duplicate_indices = []          
+                                     
     for i in range(9):
         for dup in return_duplicate_index(puzzle[i]):
             for dup_index in dup:
@@ -46,10 +50,12 @@ def sudoku_validifier(puzzle):      #returns all duplicates of sudoku board and 
 
     return duplicate_indices
 
-
-def remove_fixed_indices(fix, bad):                                     #fix = list of fixed indices as '[(2,5), (3,7), ...].
-    return [bad[x] for x in range(len(bad)) if bad[x][:-1] not in fix]  #bad = list of new boardnumbers as [(3,7,9), (2,5,9), ...]
-                                                                        #where first two is index and third value is the number 
+#Removes fix indices from list. fix = list of fixed indices as '[(2,5), (3,7), ...].
+#bad = list of new boardnumbers as [(3,7,9), (2,5,9), ...]
+#where first two integers are indices and third is their number 
+def remove_fixed_indices(fix, bad):                                     
+    return [bad[x] for x in range(len(bad)) if bad[x][:-1] not in fix]  
+                                                                        
 
 def sudoku_solver(puzzle):
     puzzle = np.array(puzzle)
