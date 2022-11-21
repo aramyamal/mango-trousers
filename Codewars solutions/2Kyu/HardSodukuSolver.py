@@ -1,8 +1,21 @@
 #https://www.codewars.com/kata/5588bd9f28dbb06f43000085/train/python
+#https://nidragedd.github.io/sudoku-genetics/
+
+# generate initial population
+# repeat
+#     rank the solutions, and retain only the percentage specified by selection rate
+#     repeat
+#         randomly select two solutions from the population
+#         randomly choose a crossover point
+#         recombine the solutions to produce n new solutions
+#         apply the mutation operator to the solutions
+#     until a new population has been produced
+# until a solution is found or the maximum number of generations is reached
+
 import numpy as np
 from random import randint
 
-def return_duplicate_index(list):   #returns all indexes of duplicates except for 0-duplicates
+def return_duplicate_index(list):   #for a list: returns 1-d index of all duplicates except for 0-duplicates
     dup = {}
     for i,x in enumerate(list):
         dup.setdefault(x,[]).append(i)
@@ -10,38 +23,42 @@ def return_duplicate_index(list):   #returns all indexes of duplicates except fo
     return duplicate_index
 
 
-def sudoku_validifier(puzzle):
-    puzzle = np.array(puzzle)
-    duplicate_indices = []
-
+def sudoku_validifier(puzzle):      #returns all duplicates of sudoku board and the corresponding
+    puzzle = np.array(puzzle)       #2d-index of each duplicate. Return example of 1 duplicate:
+    duplicate_indices = []          #'[(3, 5), (6, 5)]'. 2 duplicates: '[(3, 5), (3, 8), (2, 8), (3, 8)]'.
+                                    #Multiple of the same index occurs because duplicates in both row/column and/or square 
     for i in range(9):
         for dup in return_duplicate_index(puzzle[i]):
             for dup_index in dup:
-                duplicate_indices.append([i, dup_index])
+                duplicate_indices.append((i, dup_index))
 
     for j in range(9):
         for dup in return_duplicate_index(puzzle[:,j]):
             for dup_index in dup:
-                duplicate_indices.append([dup_index, j])
+                duplicate_indices.append((dup_index, j))
 
     for k in range(0,9,3): 
         for l in range(0,9,3):
             list = puzzle[k:k+3,l:l+3].flatten()
             for dup in return_duplicate_index(list):
                 for dup_index in dup:
-                    duplicate_indices.append([dup_index//3 + k, dup_index%3 + l])
+                    duplicate_indices.append((dup_index//3 + k, dup_index%3 + l))
 
-    return duplicate_indices #if duplicate_indices else None
+    return duplicate_indices
 
+
+def remove_fixed_indices(fix, bad):                                     #fix = list of fixed indices as '[(2,5), (3,7), ...].
+    return [bad[x] for x in range(len(bad)) if bad[x][:-1] not in fix]  #bad = list of new boardnumbers as [(3,7,9), (2,5,9), ...]
+                                                                        #where first two is index and third value is the number 
 
 def sudoku_solver(puzzle):
     puzzle = np.array(puzzle)
     puzzle_sol = puzzle.copy()                  #array to modify
     constants_indices = []
     for i,j in np.ndindex(puzzle.shape):        #make a list with the indices that cannot be changed
-        if puzzle[i,j] in range(1,10):
+        if puzzle[i,j] != 0:
             constants_indices.append([i,j])
-    
+
     # counter = 0
     # while counter < 100000:
     #     new_elements_pos = []                       #create a list with lists, where each list is [i, j, 'new number'] picked randomly
@@ -71,7 +88,7 @@ def sudoku_solver(puzzle):
 matrix = [
             [0, 0, 6, 1, 0, 0, 0, 0, 8], 
             [0, 8, 0, 0, 9, 0, 0, 3, 0], 
-            [8, 0, 0, 0, 0, 5, 4, 0, 0], 
+            [2, 0, 0, 0, 0, 5, 4, 0, 0], 
             [4, 0, 0, 0, 0, 1, 8, 0, 0], 
             [0, 3, 0, 0, 7, 0, 0, 4, 0], 
             [0, 0, 7, 9, 0, 0, 0, 0, 3], 
@@ -92,4 +109,4 @@ solution = [
             [1, 7, 3, 8, 6, 2, 5, 9, 4]
         ]
 
-print(sudoku_solver(matrix))
+print(list(return_duplicate_index(np.array(matrix[1]))))
