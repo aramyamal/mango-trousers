@@ -1,5 +1,5 @@
 import numpy as np
-#input: list of 2-element tuples, where each tuple is an interval.
+#input: list of 2-element tuples, where each tuple is an interval of integers.
 #output: new list of 2-element tuples with overlapping intervals merged.
 def merge_intervals(l):    
     l = list(zip(sorted([i[0] for i in l]), sorted([i[1] for i in l])))
