@@ -115,7 +115,7 @@ def sudokuGA(puzzle):
     population_size = 1000
     selection_rate = 0.65
     random_selection_rate = 0.25
-    number_of_children = 4
+    number_of_children = 0
     #((selection_rate + random_selection_rate)/ 2) * number_of_children = 1
     max_generations = 100000
     mutation_rate = 0.40
