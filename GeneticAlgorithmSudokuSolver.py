@@ -56,10 +56,12 @@ def remove_fixed_indices(badboard, fixedboard):
     """                                  
     return [badboard[x] for x in range(len(badboard)) if badboard[x][:-1] not in fixedboard]  
 
-def fitness_function(puzzle, fixed_indices): #number of duplicates without the fixed numbers
+def fitness_function(puzzle, fixed_indices):
+    """number of duplicates without the fixed numbers"""
     return len(remove_fixed_indices(sudoku_validifier(puzzle), fixed_indices))
 
 def create_child(father, mother):
+    """Create matrix from father and mother"""
     father, mother = np.array(father), np.array(mother)
     child = father.copy()
     for i,j in np.ndindex((child.shape)):
@@ -68,6 +70,7 @@ def create_child(father, mother):
     return child
 
 def create_ancestors(puzzle, population_size):
+    """Create first generation"""
     current_generation = []
     print("generating new ancestors")
     for _ in range(population_size):
@@ -79,6 +82,7 @@ def create_ancestors(puzzle, population_size):
     return current_generation
 
 def plot(ylist, population_size, selection_rate, random_selection_rate, mutation_rate, best_fitness, time):
+    """Plot fitness over time with labeled parameters"""
     xlist = range(len(ylist))
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
@@ -138,7 +142,7 @@ def sudokuGA(puzzle):
 
         fitness_list = [fitness_function(individual, fixed_indices) for individual in current_generation]
         fitness_list_indices = np.argsort(fitness_list, kind='mergesort')
-        fitness_over_time.append(fitness_list[fitness_list_indices[0]]) #append for graph
+        fitness_over_time.append(fitness_list[fitness_list_indices[0]]) #append for plot
 
         if fitness_over_time[-1] == min(fitness_over_time):
             best_solution = current_generation[fitness_list_indices[0]]
@@ -180,8 +184,8 @@ def sudokuGA(puzzle):
         count += 1
         if count%100==0:
             print(f"current generation: {count} \t current best fitness: {fitness_over_time[-1]}")
-    end_time = time.time()       
 
+    end_time = time.time()       
     plot(fitness_over_time, population_size, selection_rate, random_selection_rate, mutation_rate, min(fitness_over_time), (end_time-start_time))
     print(f"mutated cells count: {mutated_cells_count}")
     print(f"best solution: \n {best_solution}")
@@ -235,6 +239,4 @@ testmatrix = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
 
-sudokuGA(solution)
-#print(np.zeros((9,9)))
-#print(np.array(matrix))
+sudokuGA(matrix_easy)
