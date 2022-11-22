@@ -211,7 +211,6 @@ solution = [
             [1, 7, 3, 8, 6, 2, 5, 9, 4]
         ]
 
-
 matrix_easy = [
                 [5,3,0,0,7,0,0,0,0],
                 [6,0,0,1,9,5,0,0,0],
@@ -236,6 +235,6 @@ testmatrix = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
 
-sudokuGA(testmatrix)
+sudokuGA(matrix)
 #print(np.zeros((9,9)))
 #print(np.array(matrix))
