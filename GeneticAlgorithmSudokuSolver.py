@@ -113,7 +113,7 @@ def sudokuGA(puzzle):
     random_selection_rate = 0.25
     number_of_children = 4
     #((selection_rate + random_selection_rate)/ 2) * number_of_children = 1
-    max_generations = 10000
+    max_generations = 100000
     mutation_rate = 0.40
     restart_after_n_generations = 1000
    
@@ -163,7 +163,7 @@ def sudokuGA(puzzle):
 
         if fitness_over_time[-1] == 0:
             print("Solution found!")
-            found_solution == True
+            found_solution = True
 
         if count > 2 and fitness_over_time[-1] == fitness_over_time[-2]:
             local_minima_loop += 1
@@ -235,6 +235,6 @@ testmatrix = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
 
-sudokuGA(matrix)
+sudokuGA(solution)
 #print(np.zeros((9,9)))
 #print(np.array(matrix))
