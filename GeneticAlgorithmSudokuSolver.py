@@ -112,10 +112,17 @@ def sudokuGA(puzzle):
 
     puzzle = np.array(puzzle)
     fitness_over_time = []
+<<<<<<< HEAD
     population_size = 10000
     selection_rate = 0.20
     random_selection_rate = 0.16
     number_of_children = 4
+=======
+    population_size = 1000
+    selection_rate = 0.65
+    random_selection_rate = 0.25
+    number_of_children = 0
+>>>>>>> 572c6817d9bfc618f78fe0cb77da26ecdd7d97c1
     #((selection_rate + random_selection_rate)/ 2) * number_of_children = 1
     max_generations = 1000
     mutation_rate = 0.5
