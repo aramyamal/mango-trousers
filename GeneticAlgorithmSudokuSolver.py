@@ -112,14 +112,15 @@ def sudokuGA(puzzle):
 
     puzzle = np.array(puzzle)
     fitness_over_time = []
-    population_size = 1000
-    selection_rate = 0.65
-    random_selection_rate = 0.25
+    population_size = 10000
+    selection_rate = 0.20
+    random_selection_rate = 0.16
     number_of_children = 4
     #((selection_rate + random_selection_rate)/ 2) * number_of_children = 1
-    max_generations = 100000
-    mutation_rate = 0.40
-    restart_after_n_generations = 1000
+    max_generations = 1000
+    mutation_rate = 0.5
+    cell_mutation_rate = 0.01234
+    restart_after_n_generations = 50
    
     current_generation = create_ancestors(puzzle, population_size)   
     
@@ -141,7 +142,7 @@ def sudokuGA(puzzle):
         next_generation = []
 
         fitness_list = [fitness_function(individual, fixed_indices) for individual in current_generation]
-        fitness_list_indices = np.argsort(fitness_list, kind='mergesort')
+        fitness_list_indices = np.argsort(fitness_list, kind='heapsort')
         fitness_over_time.append(fitness_list[fitness_list_indices[0]]) #append for plot
 
         if fitness_over_time[-1] == min(fitness_over_time):
@@ -158,12 +159,19 @@ def sudokuGA(puzzle):
             next_generation_children.append(create_child(choice(next_generation), choice(next_generation)))
         next_generation += next_generation_children
 
+        # for individual in next_generation:  #mutate next generation
+        #     if random() < mutation_rate:
+        #         mutated_cell_index = (randint(0,8), randint(0,8))
+        #         if mutated_cell_index not in fixed_indices:
+        #             individual[mutated_cell_index] = randint(1,9)
+        #             mutated_cells_count +=1
+
         for individual in next_generation:  #mutate next generation
             if random() < mutation_rate:
-                mutated_cell_index = (randint(0,8), randint(0,8))
-                if mutated_cell_index not in fixed_indices:
-                    individual[mutated_cell_index] = randint(1,9)
-                    mutated_cells_count +=1
+                for i,j in np.ndindex((9,9)):
+                    if (i,j) not in fixed_indices and random() < cell_mutation_rate:
+                        individual[i, j] = randint(1,9)
+                        mutated_cells_count +=1
 
         if fitness_over_time[-1] == 0:
             print("Solution found!")
@@ -178,18 +186,21 @@ def sudokuGA(puzzle):
             print("encountered local minima")
             next_generation = create_ancestors(puzzle, population_size)
             local_minima_loop = 0
+            mutated_cells_count = 0
         
         current_generation = next_generation
         
         count += 1
-        if count%100==0:
-            print(f"current generation: {count} \t current best fitness: {fitness_over_time[-1]}")
+        # if count%10==0:
+        #     print(f"current generation: {count} \t current best fitness: {fitness_over_time[-1]}")
+        print(f"current generation: {count} \t current best fitness: {fitness_over_time[-1]} \
+            \t current median fitness: {fitness_list[fitness_list_indices[population_size//2]]} \
+            \t av. mutated cells count p. ind.: {mutated_cells_count/population_size:0.1f}")
 
     end_time = time.time()       
     plot(fitness_over_time, population_size, selection_rate, random_selection_rate, mutation_rate, min(fitness_over_time), (end_time-start_time))
-    print(f"mutated cells count: {mutated_cells_count}")
-    print(f"best solution: \n {best_solution}")
-    return
+    
+    return best_solution
 
 matrix = [
             [0, 0, 6, 1, 0, 0, 0, 0, 8], 
@@ -239,4 +250,4 @@ testmatrix = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
 
-sudokuGA(matrix_easy)
+print(sudokuGA(matrix))
